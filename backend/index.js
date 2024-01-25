@@ -1,10 +1,11 @@
 const  express = require("express")
 const app = express();
 const {createTodo}=require("./types")
-const { updateTodos } = require("./types");
+const { updateTodo } = require("./types");
 const{todo}=require("./db")
 
 app.use(express.json());
+
 app.post("/addTodo",async (req,res)=>{
 const createPayload = req.body;
 const parsedPayload = createTodo.safeParse(createPayload);
@@ -16,8 +17,8 @@ if(!parsedPayload.success){
 }
 
 await todo.create({
-    title:parsedPayload.title,
-    description:parsedPayload.description,
+    title:createPayload.title,
+    description:createPayload.description,
     completed: false
 })
 res.json({
@@ -32,21 +33,32 @@ app.get("/getTodos",async (req,res)=>{
  })
 })
 
-app.put("/status",async function(req,res){
+app.put("/status1",async function(req,res){
 const updatePayload = req.body;
-const updateParsedPayload=updateTodos.safeParse(updatePayload);
+
+const updateParsedPayload=updateTodo.safeParse(updatePayload);
+console.log(updatePayload.id);
 if(!updateParsedPayload.success){
-    res.status(411).send({
+    res.status(411).json({
 msg:"sent wrong update"
     })
-
-  await todo.update({
-    _id:req.body.id
-  },{
-    completed:true
+   
+try{
+  await todo.updateOne(
+   {id:updatePayload.id}
+  ,{
+   $set:{completed:true}
   })
   res.json({
-    mdg:"todo marked as completed"
+    msg:"todo marked as completed"
   })
+}catch(err){
+console.log(err)
 }
+}
+
+})
+
+app.listen(3000,()=>{
+    console.log(`app is listening on port 3000`)
 })

@@ -3,6 +3,8 @@ const app = express();
 const {createTodo}=require("./types")
 const { updateTodo } = require("./types");
 const{todo}=require("./db")
+const cors = require("cors");
+app.use(cors());
 
 app.use(express.json());
 

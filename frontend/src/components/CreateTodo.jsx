@@ -10,10 +10,10 @@ export function CreateTodo(){
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-
-          padding: 40,
-          margin: 100,
-          background: "red",
+          borderRadius:20,
+          padding: 50,
+          margin: 200,
+          background: "grey",
         }}
       >
         <input
